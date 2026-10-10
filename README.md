@@ -2,15 +2,15 @@
 
 Master Final Project — MIA University
 
-This repository contains the implementation and supporting material for the Final Project **“AI-Powered Phishing Email Detection Using Natural Language Processing and Machine Learning”**.
+This private repository contains the implementation of the Final Project **“AI-Powered Phishing Email Detection Using Natural Language Processing and Machine Learning”**.
 
 ## Project scope
 
-The project follows a deliberately simple and reproducible supervised-learning pipeline:
+The academic experiment follows a deliberately simple and reproducible supervised-learning pipeline:
 
 **Email text → preprocessing → TF-IDF → Logistic Regression → evaluation**
 
-The academic experiment remains based on one supervised model, as defined in the approved project scope.
+The project uses one supervised model, in line with the approved scope.
 
 ## Methodology
 
@@ -19,15 +19,17 @@ The academic experiment remains based on one supervised model, as defined in the
 - Stratified **70% train / 15% validation / 15% test** split
 - TF-IDF fitted **only on the training set**
 - Logistic Regression as the supervised baseline
-- Validation-only threshold selection
+- Threshold selection performed on the validation set only
 - Final untouched test-set evaluation
 - False Positive / False Negative error analysis
 - External validation on **TREC_07** from the Phishing Email Curated Datasets (Zenodo DOI: 10.5281/zenodo.8339691)
-- Auxiliary deterministic validation for suspicious/typosquatted email domains; this layer is kept separate from the ML metrics
+- Auxiliary deterministic email-address validation for malformed and lookalike domains
+
+The deterministic address validator is kept separate from the ML metrics and is not presented as a second supervised model.
 
 ## Main results
 
-### Internal test set — threshold 0.50
+### Internal test set @ threshold 0.50
 
 | Metric | Result |
 |---|---:|
@@ -37,7 +39,7 @@ The academic experiment remains based on one supervised model, as defined in the
 | F1-score | 98.72% |
 | ROC-AUC | 99.89% |
 
-### External validation — TREC_07
+### External validation — TREC_07 @ threshold 0.50
 
 | Metric | Result |
 |---|---:|
@@ -47,7 +49,7 @@ The academic experiment remains based on one supervised model, as defined in the
 | F1-score | 90.46% |
 | ROC-AUC | 96.45% |
 
-The lower external score is treated as meaningful evidence about generalization and dataset bias rather than hidden by the internal split.
+The external result is intentionally reported separately because it gives a more realistic view of generalization beyond the original aggregate dataset.
 
 ## Repository structure
 
@@ -55,10 +57,12 @@ The lower external score is treated as meaningful evidence about generalization 
 final-project-mia-university/
 ├── notebooks/
 │   └── Final_Project_v3_Colab.ipynb
-├── reports/
-│   └── AI_Powered_Phishing_Final_Project_COMPLETE.docx
-├── evidence/
-│   └── Final_Project_v3_Colab_Evidence.pdf
+├── src/
+│   ├── __init__.py
+│   ├── address_validator.py
+│   └── phishing_utils.py
+├── tests/
+│   └── test_address_validator.py
 ├── results/
 │   └── README.md
 ├── .gitignore
@@ -66,22 +70,46 @@ final-project-mia-university/
 └── README.md
 ```
 
-## How to run
+## How to run the full experiment
 
 The recommended environment is **Google Colab**.
 
 1. Open `notebooks/Final_Project_v3_Colab.ipynb`.
 2. Run the notebook from the first cell.
-3. The notebook downloads the original Kaggle dataset at runtime.
-4. It downloads and verifies the TREC_07 external corpus from Zenodo.
-5. Run all cells in order.
-6. Generated artifacts are written to `/content/final_project_outputs` in Colab.
+3. The original Kaggle dataset is downloaded at runtime.
+4. TREC_07 is downloaded from Zenodo and its checksum is verified.
+5. Run the cells in order.
+6. Generated artifacts are saved to `/content/final_project_outputs`.
 
-No dataset is committed to this repository.
+The datasets and generated model artifacts are intentionally excluded from Git.
+
+## Local reusable components
+
+Install dependencies:
+
+```bash
+pip install -r requirements.txt
+```
+
+Run the deterministic address-validator tests:
+
+```bash
+pytest -q
+```
+
+Example:
+
+```python
+from src.address_validator import analyze_email_address
+
+print(analyze_email_address("microsoft@m1crosoft.com"))
+```
+
+The expected verdict is `INVALID_OR_SUSPICIOUS`, with `microsoft.com` identified as the likely impersonated domain.
 
 ## Reproducibility
 
-The notebook uses a fixed random seed (`RANDOM_STATE = 42`) and saves:
+The notebook uses `RANDOM_STATE = 42` and saves:
 
 - TF-IDF vectorizer
 - Logistic Regression model
@@ -90,11 +118,16 @@ The notebook uses a fixed random seed (`RANDOM_STATE = 42`) and saves:
 - False Negative examples
 - address-validator configuration
 
-## Notes
+## Important interpretation
 
-The deterministic address-validation layer is an auxiliary screening component. It is **not** a second supervised model and is not mixed into the primary thesis metrics.
+A syntactically valid email address is not automatically legitimate. The auxiliary validator detects obvious structural anomalies, one-edit provider typos, transpositions, and common digit/letter substitutions such as:
 
-Examples such as `m1crosoft.com`, `gma1l.com` and `gmial.com` are detected as suspicious provider-domain lookalikes.
+- `m1crosoft.com → microsoft.com`
+- `gma1l.com → gmail.com`
+- `gmial.com → gmail.com`
+- `paypa1.com → paypal.com`
+
+A result of `NO_OBVIOUS_ADDRESS_ANOMALY` means only that no obvious address-level anomaly was found; it does not prove sender identity.
 
 ## Author
 
