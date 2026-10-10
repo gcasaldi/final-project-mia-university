@@ -70,6 +70,29 @@ final-project-mia-university/
 └── README.md
 ```
 
+## Interactive dashboard
+
+A Streamlit dashboard is included as a demonstrator of the V3 implementation.
+
+It provides:
+
+- full email subject/body phishing classification;
+- phishing probability using the primary 0.50 decision threshold;
+- deterministic validation of isolated email addresses and provider lookalikes;
+- the validated internal and TREC_07 performance results;
+- a concise explanation of the methodology and academic scope.
+
+Run locally with:
+
+```bash
+pip install -r requirements.txt
+streamlit run streamlit_app.py
+```
+
+The first run trains the V3 TF-IDF + Logistic Regression baseline from the same public Kaggle dataset used by the notebook. The trained model is cached for subsequent dashboard interactions.
+
+The dashboard is a **presentation layer**, not a second experiment: the reported thesis metrics remain those obtained in the V3 Colab evaluation.
+
 ## How to run the full experiment
 
 The recommended environment is **Google Colab**.
