@@ -70,6 +70,14 @@ final-project-mia-university/
 └── README.md
 ```
 
+## Public research dashboard (GitHub Pages)
+
+**Public site:** https://gcasaldi.github.io/final-project-mia-university/
+
+GitHub Pages hosts a responsive **static research showcase** with published V3 metrics, methodology, a browser-only suspicious-address checker, and deterministic message-indicator inspection. The static page **does not execute the TF-IDF / Logistic Regression model**, cannot provide ML phishing probabilities, and does not replace the live Python dashboard.
+
+The standalone **Streamlit machine-learning application** is in `streamlit_app.py`. It must run on a Python-capable service (for example Streamlit Community Cloud) rather than GitHub Pages, which cannot run a Streamlit/Python backend. See `docs/PROFESSOR_DEMO.md` for installation/deployment instructions.
+
 ## Interactive dashboard
 
 A Streamlit dashboard is included as a demonstrator of the V3 implementation.
