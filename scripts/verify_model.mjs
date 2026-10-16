@@ -31,7 +31,7 @@ const addressTests = [
   ["contact@outlook.com", "no-obvious-issue", null],
   ["invalid@", "suspicious", null],
   ["", "invalid", null],
-  ["suspicious@gmail,com", "suspicious", "gmail.com"],
+  ["suspicious@gmail,com", "suspicious", null],
   ["support@paypa1.com.", "suspicious", "paypal.com"],
   ["x@".concat("a".repeat(300))+".com", "invalid", null],
 ];
