@@ -47,3 +47,32 @@ Entrypoint:
 ```text
 streamlit_app.py
 ```
+
+## Public academic browser dashboard
+
+Public URL: https://gcasaldi.github.io/final-project-mia-university/
+
+The GitHub Pages version includes actual **client-side TF-IDF + Logistic Regression prediction**. It uses the exported vocabulary, IDF array, coefficients, and intercept from the exact same supervised Python model in `src/model_service.py`. Inference runs locally in the visitor's browser: no email subject/body or file needs to be transmitted to a Python service. The published `docs/model.json` is a **model artifact**, not the source dataset.
+
+The source implementation can be inspected in:
+
+- `docs/index.html`, `docs/site.css`, `docs/site.js`: website and interface;
+- `docs/model-runtime.mjs`: browser TF-IDF and Logistic Regression arithmetic;
+- `scripts/export_browser_model.py`: reproducible sklearn model export, held-out evaluation, and numerical test vectors;
+- `scripts/verify_model.mjs`: JavaScript/Python prediction parity checks;
+- `.github/workflows/build_browser_model.yml`: automatic training, tests, and model artifact publication.
+
+A visitor can paste a message, choose a plain-text TXT/EML file, or check an email address. The separate address checker is deterministic and is **not** part of the reported supervised model metrics. Encoded or multipart EML content is intentionally rejected because the static client does not contain a complete MIME parser.
+
+To regenerate the model locally after installing dependencies, run:
+
+```bash
+python -m scripts.export_browser_model
+node scripts/verify_model.mjs
+```
+
+The internal test metrics reported on the website are the documented original V3 results, which can be compared with the held-out metrics recalculated automatically during model export. The browser inference is validated using Python-generated examples and numeric tolerance before publication.
+
+### Interpretation limits
+
+This text-only classifier cannot inspect attachments, follow URLs, verify SPF/DKIM/DMARC, or authenticate sender identities. An ML label of `Legitimate` does not establish that an email is safe. The dashboard is a research demonstration and should not be used as a standalone security control.
