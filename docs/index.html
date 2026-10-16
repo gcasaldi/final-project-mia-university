@@ -1,0 +1,308 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0b1021">
+  <meta name="description" content="PhishLens: reproducible academic research on NLP-based phishing email detection. Interactive email indicator inspector and model performance.">
+  <title>PhishLens | AI-Powered Phishing Email Detection</title>
+  <style>
+    :root {color-scheme:dark;--bg:#080e1d;--panel:#111b32;--panel2:#14203b;--line:#293955;--txt:#f1f5ff;--muted:#a4b3ce;--accent:#a78bfa;--cyan:#45d6db;--danger:#ffae87;--ok:#6fe1ae}
+    * {box-sizing:border-box}
+    html {scroll-behavior:smooth}
+    body {margin:0;font:16px/1.55 system-ui,-apple-system,Segoe UI,Arial,sans-serif;color:var(--txt);background:radial-gradient(ellipse 90% 36% at 60% -10%,#352363 0,transparent 75%),var(--bg)}
+    a {color:#c7b8ff}
+    a:hover {color:white}
+    .wrap {width:min(1140px,calc(100% - 36px));margin:auto}
+    .nav {display:flex;justify-content:space-between;align-items:center;gap:18px;padding:24px 0;flex-wrap:wrap}
+    .brand {font-weight:800;font-size:1.2rem;letter-spacing:.2px;color:white;text-decoration:none}
+    .brand i {display:inline-grid;place-items:center;width:35px;height:35px;border-radius:12px;background:linear-gradient(135deg,#8b5cf6,#22d3ee);font-style:normal;margin-right:8px}
+    .navlinks {display:flex;gap:20px;flex-wrap:wrap;font-size:.91rem}
+    .navlinks a {text-decoration:none;color:#cbd5e1}
+    .hero {padding:63px 0 50px;max-width:880px}
+    .eyebrow {text-transform:uppercase;letter-spacing:.16em;color:#bba6ff;font-size:.75rem;font-weight:800}
+    h1 {font-size:clamp(2.4rem,6vw,4.9rem);line-height:1.08;letter-spacing:-.055em;margin:15px 0 23px}
+    .gradient {background:linear-gradient(95deg,#c6b2ff,#65f1ef);background-clip:text;color:transparent}
+    .lede {max-width:730px;font-size:1.13rem;color:var(--muted);margin:0 0 26px}
+    .actions {display:flex;gap:12px;flex-wrap:wrap}
+    .btn,button {border:1px solid #6145ac;background:#7948d7;color:white;border-radius:12px;padding:12px 17px;font:700 .95rem system-ui;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;min-height:46px}
+    .btn:hover,button:hover {filter:brightness(1.16)}
+    .btn.secondary,button.secondary {border-color:var(--line);background:#172340;color:#dce6fb}
+    .btn:focus-visible,button:focus-visible,input:focus-visible,textarea:focus-visible {outline:3px solid var(--cyan);outline-offset:3px}
+    .notice {border:1px solid #685595;background:rgba(89,66,133,.23);border-radius:14px;padding:17px 20px;color:#e8e0ff;margin-bottom:36px}
+    .section {padding:25px 0 40px;scroll-margin-top:20px}
+    .section h2 {font-size:clamp(1.55rem,3vw,2rem);letter-spacing:-.035em;margin:0 0 8px}
+    .sub {color:var(--muted);margin:0 0 22px;max-width:820px}
+    .grid {display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
+    .tile,.card {background:linear-gradient(155deg,var(--panel2),var(--panel));border:1px solid var(--line);border-radius:17px;padding:23px}
+    .tile small {display:block;color:var(--muted);font-size:.86rem}
+    .tile strong {font-size:2.5rem;display:block;letter-spacing:-.055em;line-height:1.3;margin:5px 0;color:white}
+    .tile span {display:block;font-size:.78rem;color:#80e9cd}
+    .duo {display:grid;grid-template-columns:1fr 1fr;gap:18px}
+    .card h3 {font-size:1.15rem;margin:0 0 14px}
+    .card p {color:var(--muted)}
+    label {display:block;font-size:.91rem;font-weight:700;margin:13px 0 8px}
+    textarea,input {display:block;width:100%;font:inherit;color:white;background:#090f20;border:1px solid #415472;border-radius:11px;padding:13px 15px}
+    textarea {height:173px;resize:vertical}
+    input {min-height:48px}
+    .example {font-size:.85rem}
+    .form-actions {display:flex;gap:9px;flex-wrap:wrap;margin-top:12px}
+    .output {border-radius:13px;border:1px solid var(--line);background:#090f20;padding:16px;margin-top:16px;min-height:83px}
+    .output strong {display:block;margin-bottom:5px}
+    .output p {margin:5px 0;font-size:.94rem;color:#dce5f6}
+    .output ul {margin:12px 0 0;padding-left:20px}
+    .output li {padding:2px 0;overflow-wrap:anywhere}
+    .output.warning {border-color:#a66a4b;background:#271c1c}
+    .output.safe {border-color:#357963;background:#0c2828}
+    .tag {display:inline-block;padding:4px 9px;border-radius:7px;background:#243353;color:#d7e6ff;font-size:.76rem;font-weight:750;margin-bottom:9px}
+    .tiny {font-size:.83rem;color:var(--muted);margin:12px 0 0}
+    .chart-row {margin:14px 0}
+    .chart-head {display:flex;justify-content:space-between;font-size:.88rem;margin-bottom:7px}
+    .bar {background:#263451;height:12px;border-radius:18px;overflow:hidden}
+    .bar > span {display:block;height:100%;background:linear-gradient(90deg,#8c66ec,#49d7d3);border-radius:inherit}
+    .bar.external > span {background:linear-gradient(90deg,#4865b2,#42b8c7)}
+    .steps {display:grid;grid-template-columns:repeat(4,1fr);gap:13px;margin-top:20px}
+    .step {background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:18px}
+    .step b {color:var(--cyan);font-size:.8rem;display:block;margin-bottom:7px}
+    .step strong {display:block}
+    .step p {font-size:.87rem;color:var(--muted);margin:6px 0 0}
+    .foot {border-top:1px solid var(--line);padding:25px 0 44px;color:var(--muted);font-size:.89rem;margin-top:26px}
+    .foot-flex {display:flex;justify-content:space-between;gap:15px;flex-wrap:wrap}
+    code {color:#bcfff0}
+    @media(max-width:880px){.grid,.steps{grid-template-columns:repeat(2,minmax(0,1fr))}.duo{grid-template-columns:1fr}.hero{padding:37px 0 36px}}
+    @media(max-width:460px){.grid,.steps{grid-template-columns:1fr}.tile strong{font-size:2.1rem}.navlinks{gap:12px}.card,.tile{padding:17px}}
+    @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+  </style>
+</head>
+<body>
+<div class="wrap">
+  <header class="nav">
+    <a class="brand" href="#top"><i aria-hidden="true">✦</i> PhishLens <span style="color:#8292b3;font-size:.73rem;font-weight:600">/ RESEARCH</span></a>
+    <nav class="navlinks" aria-label="Main navigation">
+      <a href="#performance">Performance</a>
+      <a href="#inspector">Inspect email</a>
+      <a href="#address">Check address</a>
+      <a href="#methodology">Methodology</a>
+      <a href="https://github.com/gcasaldi/final-project-mia-university" target="_blank" rel="noopener noreferrer">GitHub ↗</a>
+    </nav>
+  </header>
+
+  <main id="top">
+    <section class="hero">
+      <p class="eyebrow">MIA University · Master's final project</p>
+      <h1>Spot the signals.<br><span class="gradient">Understand the threat.</span></h1>
+      <p class="lede">An academic project exploring phishing email detection using natural language processing, TF-IDF feature extraction and Logistic Regression — with transparent evaluation on internal and external datasets.</p>
+      <div class="actions">
+        <a class="btn" href="#inspector">Inspect a message →</a>
+        <a class="btn secondary" href="#performance">Explore the research</a>
+      </div>
+    </section>
+
+    <aside class="notice" role="note">
+      <strong>Research transparency.</strong> This GitHub Pages website is a static interactive showcase. Its browser-based inspectors use deterministic rules and <strong>do not execute the trained machine-learning classifier</strong>. The numerical results below are reference results reported in the V3 notebook, not live predictions. Do not use this demo to decide whether an email is safe.
+    </aside>
+
+    <section class="section" id="performance">
+      <p class="eyebrow">01 / Research findings</p>
+      <h2>Measured performance, not marketing claims.</h2>
+      <p class="sub">Reported V3 evaluation at a fixed decision threshold of 0.50. Internal testing and source-separated TREC_07 validation are shown separately.</p>
+      <div class="grid">
+        <div class="tile"><small>Internal accuracy</small><strong>98.66%</strong><span>Held-out test set</span></div>
+        <div class="tile"><small>Internal F1-score</small><strong>98.72%</strong><span>Held-out test set</span></div>
+        <div class="tile"><small>External accuracy</small><strong>89.85%</strong><span>TREC_07</span></div>
+        <div class="tile"><small>External F1-score</small><strong>90.46%</strong><span>TREC_07</span></div>
+      </div>
+      <div class="duo" style="margin-top:18px">
+        <div class="card">
+          <h3>Internal test set</h3>
+          <div class="chart-row"><div class="chart-head"><span>Precision</span><b>98.38%</b></div><div class="bar"><span style="width:98.38%"></span></div></div>
+          <div class="chart-row"><div class="chart-head"><span>Recall</span><b>99.07%</b></div><div class="bar"><span style="width:99.07%"></span></div></div>
+          <div class="chart-row"><div class="chart-head"><span>ROC-AUC</span><b>99.89%</b></div><div class="bar"><span style="width:99.89%"></span></div></div>
+        </div>
+        <div class="card">
+          <h3>External validation · TREC_07</h3>
+          <div class="chart-row"><div class="chart-head"><span>Precision</span><b>92.74%</b></div><div class="bar external"><span style="width:92.74%"></span></div></div>
+          <div class="chart-row"><div class="chart-head"><span>Recall</span><b>88.28%</b></div><div class="bar external"><span style="width:88.28%"></span></div></div>
+          <div class="chart-row"><div class="chart-head"><span>ROC-AUC</span><b>96.45%</b></div><div class="bar external"><span style="width:96.45%"></span></div></div>
+        </div>
+      </div>
+      <p class="tiny">Source: <a href="https://github.com/gcasaldi/final-project-mia-university/blob/main/notebooks/Final_Project_v3_Colab.ipynb">V3 academic notebook</a>. These are previously documented results; this page does not rerun the experiment.</p>
+    </section>
+
+    <section class="section" id="inspector">
+      <p class="eyebrow">02 / Browser-based inspector</p>
+      <h2>Inspect a suspicious message.</h2>
+      <p class="sub">Paste a subject or body to highlight selected warning indicators. Everything is processed inside your browser; the text is not uploaded anywhere by this site. This is a rule-based preview, <strong>not the ML classifier</strong>.</p>
+      <div class="duo">
+        <div class="card">
+          <h3>Message indicators</h3>
+          <label for="email-text">Email subject and/or body</label>
+          <textarea id="email-text" spellcheck="false" placeholder="Paste an email to inspect its visible warning indicators..."></textarea>
+          <div class="form-actions">
+            <button id="analyze" type="button">Inspect indicators →</button>
+            <button id="sample-phish" class="secondary example" type="button">Phishing-style example</button>
+            <button id="sample-normal" class="secondary example" type="button">Ordinary example</button>
+          </div>
+          <div class="output" id="email-output" role="status" aria-live="polite"><strong>Ready for inspection</strong><p>Enter a sample email, then select “Inspect indicators”.</p></div>
+        </div>
+        <div class="card">
+          <h3>How to interpret the result</h3>
+          <span class="tag">Deterministic indicators only</span>
+          <p>The inspector checks for common urgent-language patterns, visible URLs, and selected lookalike email domains. These indicators can appear in legitimate messages and can be absent from phishing attacks.</p>
+          <p>The <strong>trained NLP model</strong> lives in the separate Python/Streamlit project and is not executed on GitHub Pages. There is intentionally no synthetic “phishing probability” here.</p>
+          <a class="btn secondary" href="https://github.com/gcasaldi/final-project-mia-university/blob/main/streamlit_app.py" target="_blank" rel="noopener noreferrer">View the full ML dashboard source ↗</a>
+          <p class="tiny">Never paste confidential or personal emails into a public demo unless you are comfortable handling them locally. This page does not intentionally transmit inputs, but your browser and device remain under your control.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="address">
+      <p class="eyebrow">03 / Auxiliary address validation</p>
+      <h2>Look beyond the display name.</h2>
+      <p class="sub">The separate deterministic checker looks for malformed email addresses and obvious domain impersonation, such as <code>m1crosoft.com</code> or <code>gmial.com</code>. It cannot verify the identity or ownership of a mailbox.</p>
+      <div class="duo">
+        <div class="card">
+          <h3>Email address checker</h3>
+          <label for="address-input">Address to inspect</label>
+          <input id="address-input" type="text" inputmode="email" autocomplete="off" placeholder="security@m1crosoft.com">
+          <div class="form-actions">
+            <button type="button" id="check-address">Check address →</button>
+            <button type="button" class="secondary" id="example-address">Try an example</button>
+          </div>
+          <div class="output" id="address-output" role="status" aria-live="polite"><strong>Awaiting an address</strong><p>A format check alone never proves an email is genuine.</p></div>
+        </div>
+        <div class="card">
+          <h3>Examples of impersonation patterns</h3>
+          <div class="chart-row"><div class="chart-head"><code>m1crosoft.com</code><span>microsoft.com</span></div></div>
+          <div class="chart-row"><div class="chart-head"><code>gmial.com</code><span>gmail.com</span></div></div>
+          <div class="chart-row"><div class="chart-head"><code>paypa1.com</code><span>paypal.com</span></div></div>
+          <div class="chart-row"><div class="chart-head"><code>gma1l.com</code><span>gmail.com</span></div></div>
+          <p class="tiny">This educational browser checker mirrors selected patterns from <a href="https://github.com/gcasaldi/final-project-mia-university/blob/main/src/address_validator.py">the Python address validator</a>; it is not an exhaustive email syntax or authenticity validator.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="methodology">
+      <p class="eyebrow">04 / Reproducible methodology</p>
+      <h2>One supervised baseline. Clear evaluation.</h2>
+      <p class="sub">The study deliberately preserves the scope approved for the Master's Final Project. The address checker is an auxiliary deterministic component and is not mixed into the ML evaluation metrics.</p>
+      <div class="steps">
+        <div class="step"><b>STEP 01</b><strong>Prepare emails</strong><p>Clean duplicated and conflicting records, normalize text and tokenize URLs/email addresses.</p></div>
+        <div class="step"><b>STEP 02</b><strong>Split before fitting</strong><p>Stratified 70% train / 15% validation / 15% untouched test.</p></div>
+        <div class="step"><b>STEP 03</b><strong>TF-IDF + Logistic Regression</strong><p>Fit text vectorization on training data alone; train a single supervised classifier.</p></div>
+        <div class="step"><b>STEP 04</b><strong>Validate independently</strong><p>Measure F1, recall, precision, ROC-AUC, false positives/negatives and external TREC_07 generalization.</p></div>
+      </div>
+      <div class="actions" style="margin-top:22px">
+        <a class="btn secondary" href="https://github.com/gcasaldi/final-project-mia-university" target="_blank" rel="noopener noreferrer">Browse the GitHub repository ↗</a>
+        <a class="btn secondary" href="https://github.com/gcasaldi/final-project-mia-university/blob/main/docs/PROFESSOR_DEMO.md" target="_blank" rel="noopener noreferrer">Run the full Streamlit application ↗</a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="foot"><div class="foot-flex"><span>© 2026 Giulia Casaldi · MIA University · Academic research prototype</span><span>Privacy-conscious static website · No account or API key required</span></div></footer>
+</div>
+<script>
+(function () {
+  'use strict';
+  var providers = [
+    'gmail.com','googlemail.com','outlook.com','hotmail.com','live.com','yahoo.com','yahoo.it',
+    'icloud.com','me.com','proton.me','protonmail.com','aol.com','zoho.com','gmx.com','gmx.net',
+    'libero.it','virgilio.it','alice.it','tin.it','tiscali.it','tim.it','fastwebnet.it','aruba.it',
+    'paypal.com','amazon.com','apple.com','microsoft.com','google.com','poste.it',
+    'intesasanpaolo.com','unicredit.it'
+  ];
+  var substitutions = {'0':['o'],'1':['i','l'],'3':['e'],'4':['a'],'5':['s'],'7':['t'],'8':['b'],'9':['g']};
+  function distance(a,b) {
+    a=a.toLowerCase();b=b.toLowerCase();
+    var d=Array.from({length:a.length+1},function(){return Array(b.length+1).fill(0);});
+    for(var i=0;i<=a.length;i++)d[i][0]=i;
+    for(var j=0;j<=b.length;j++)d[0][j]=j;
+    for(i=1;i<=a.length;i++)for(j=1;j<=b.length;j++){
+      var cost=a[i-1]===b[j-1]?0:1;
+      d[i][j]=Math.min(d[i-1][j]+1,d[i][j-1]+1,d[i-1][j-1]+cost);
+      if(i>1&&j>1&&a[i-1]===b[j-2]&&a[i-2]===b[j-1])d[i][j]=Math.min(d[i][j],d[i-2][j-2]+1);
+    }
+    return d[a.length][b.length];
+  }
+  function lookalike(domain){
+    if(providers.includes(domain))return null;
+    var variants=[domain], seen=new Set(variants);
+    Object.keys(substitutions).forEach(function(ch){
+      if(!domain.includes(ch))return;
+      var snapshot=variants.slice();
+      snapshot.forEach(function(s){
+        substitutions[ch].forEach(function(repl){
+          var v=s.split(ch).join(repl);
+          if(!seen.has(v)&&variants.length<64){seen.add(v);variants.push(v);}
+        });
+      });
+    });
+    for(var i=0;i<variants.length;i++)if(variants[i]!==domain&&providers.includes(variants[i]))return variants[i];
+    var best=null, bestDist=999;
+    providers.forEach(function(p){var d=distance(domain,p);if(d<bestDist){best=p;bestDist=d;}});
+    return bestDist<=1?best:null;
+  }
+  function inspectAddress(input){
+    var raw=String(input||'').trim().replace(/^<|>$/g,'');
+    var issues=[], match=raw.split('@'), closest=null;
+    if(!raw)return {raw:raw,issues:['Please enter an email address.'],closest:null};
+    if(match.length!==2)return {raw:raw,issues:['An address must contain exactly one @ symbol.'],closest:null};
+    var domain=match[1].toLowerCase(), diagnostic=domain.replace(/[,;]/g,'.').replace(/\.$/,'');
+    if(/[,;]/.test(domain))issues.push('The domain uses a comma or semicolon instead of a dot.');
+    if(!/^[A-Za-z0-9.!#$%&'*+/=?^_{|}~-]+@(?:[A-Za-z0-9](?:[A-Za-z0-9-]{0,61}[A-Za-z0-9])?\.)+[A-Za-z]{2,63}$/.test(raw))
+      issues.push('The address does not pass this simplified syntax check.');
+    if(/[^\x00-\x7F]/.test(raw))issues.push('Non-ASCII characters merit manual review for homoglyphs.');
+    if(domain.indexOf('xn--')!==-1)issues.push('Internationalized/punycode domain: review manually.');
+    closest=lookalike(diagnostic);
+    if(closest&&diagnostic!==closest)issues.push('Possible lookalike domain: '+closest+'.');
+    return {raw:raw,issues:issues,closest:closest};
+  }
+  function output(el,title,paragraphs,items,mode){
+    el.className='output'+(mode?' '+mode:'');
+    el.replaceChildren();
+    var strong=document.createElement('strong');strong.textContent=title;el.appendChild(strong);
+    paragraphs.forEach(function(p){var x=document.createElement('p');x.textContent=p;el.appendChild(x);});
+    if(items&&items.length){
+      var ul=document.createElement('ul');
+      items.forEach(function(item){var li=document.createElement('li');li.textContent=item;ul.appendChild(li);});
+      el.appendChild(ul);
+    }
+  }
+  function showAddress(){
+    var r=inspectAddress(document.getElementById('address-input').value), el=document.getElementById('address-output');
+    if(!r.raw){output(el,'Enter an address',r.issues,[], 'warning');return;}
+    if(r.issues.length)output(el,'Review this address',['Potential anomalies were found. This result does not establish whether the email is phishing.'],r.issues,'warning');
+    else output(el,'No obvious address anomaly',['No selected format or provider-lookalike anomaly was detected. The sender may still be malicious or impersonated.'],[],'safe');
+  }
+  function showEmail(){
+    var raw=document.getElementById('email-text').value.trim(),el=document.getElementById('email-output');
+    if(!raw){output(el,'Paste a message first',['Enter a subject or body before inspecting.'],[],'warning');return;}
+    var signals=[], notes=[];
+    var addresses=raw.match(/[A-Za-z0-9.!#$%&'*+/=?^_{|}~-]+@[^\s<>"']+/g)||[];
+    var unique=Array.from(new Set(addresses.map(function(a){return a.replace(/[.,;!?]+$/,'');})));
+    unique.forEach(function(a){var r=inspectAddress(a);if(r.issues.length)signals.push('Address '+a+': '+r.issues.join(' '));});
+    var urls=raw.match(/(?:https?:\/\/|www\.)[^\s<>"']+/gi)||[];
+    if(urls.length)notes.push('Visible links found: '+urls.length+'. Inspect the actual destination before following.');
+    var urgent=/\b(urgent|immediately|act now|account suspended|verify your account|password expires|final warning|within 24 hours|limited time)\b/i;
+    if(urgent.test(raw))notes.push('Pressure/urgency language appears in the text (not proof of phishing).');
+    var requests=/\b(password|credential|security code|one.time code|bank account|payment details)\b/i;
+    if(requests.test(raw))notes.push('The message refers to sensitive information or financial details.');
+    if(signals.length)output(el,'Suspicious address indicators found',['The browser rules detected '+signals.length+' possible address-level anomaly/anomalies. This is not an ML classification.'],signals.concat(notes),'warning');
+    else output(el,'Browser inspection complete',['No suspicious address pattern was identified by the limited rules. This does NOT establish that the message is safe or legitimate.'],notes,'safe');
+  }
+  document.getElementById('check-address').addEventListener('click',showAddress);
+  document.getElementById('address-input').addEventListener('keydown',function(e){if(e.key==='Enter')showAddress();});
+  document.getElementById('example-address').addEventListener('click',function(){document.getElementById('address-input').value='security@m1crosoft.com';showAddress();});
+  document.getElementById('analyze').addEventListener('click',showEmail);
+  document.getElementById('sample-phish').addEventListener('click',function(){
+    document.getElementById('email-text').value='URGENT: Your Microsoft account has been suspended. Verify your account immediately at https://security-m1crosoft.example/login or contact security@m1crosoft.com.';
+    showEmail();
+  });
+  document.getElementById('sample-normal').addEventListener('click',function(){
+    document.getElementById('email-text').value='Hello team, our project meeting is scheduled for Tuesday at 10:00. Please share your comments before the call. Kind regards, Project Coordinator.';
+    showEmail();
+  });
+}());
+</script>
+</body>
+</html>
