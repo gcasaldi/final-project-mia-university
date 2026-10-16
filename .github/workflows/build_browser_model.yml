@@ -38,7 +38,7 @@ jobs:
       - name: Verify existing Python tests
         run: python -m pytest -q
       - name: Export V3 model coefficients and held-out metrics
-        run: python scripts/export_browser_model.py
+        run: python -m scripts.export_browser_model
       - name: Test browser inference against Python outputs
         run: |
           node --check docs/model-runtime.mjs
