@@ -74,9 +74,29 @@ final-project-mia-university/
 
 **Public site:** https://gcasaldi.github.io/final-project-mia-university/
 
-GitHub Pages hosts a responsive **static research showcase** with published V3 metrics, methodology, a browser-only suspicious-address checker, and deterministic message-indicator inspection. The static page **does not execute the TF-IDF / Logistic Regression model**, cannot provide ML phishing probabilities, and does not replace the live Python dashboard.
+This public research website is an academic interface inspired by clean security-analysis portals, with:
 
-The standalone **Streamlit machine-learning application** is in `streamlit_app.py`. It must run on a Python-capable service (for example Streamlit Community Cloud) rather than GitHub Pages, which cannot run a Streamlit/Python backend. See `docs/PROFESSOR_DEMO.md` for installation/deployment instructions.
+- **Real email text classification in the browser**, using the vocabulary, IDF weights, coefficients and intercept exported from the same trained V3 Python TF-IDF + Logistic Regression model;
+- upload of plain-text .txt and .eml messages (maximum 256 KB; encoded or multipart MIME not supported);
+- deterministic lookalike-address validation, clearly separated from supervised classification;
+- documented reference metrics for both the internal test set and external TREC_07 evaluation;
+- a dedicated **supervisor review** section linking the notebook, full Python implementation, browser inference, exporter, and tests.
+
+**Privacy:** model weights are downloaded from this public repository into the browser. The page does not intentionally upload users' email contents to a backend. It is an academic text classifier, not an antivirus scanner, URL reputation service, sender authentication check or a guarantee that a message is safe.
+
+### Rebuilding the published model
+
+`.github/workflows/build_browser_model.yml` trains `src/model_service.py` on the original Kaggle data, exports `docs/model.json` (30,000 TF-IDF features), and verifies JS predictions against Python reference examples before publishing the model via GitHub Pages. For local verification:
+
+```bash
+pip install -r requirements.txt
+python -m scripts.export_browser_model
+node scripts/verify_model.mjs
+```
+
+The browser build **is not a different model**, and the published V3 thesis reference metrics remain separate from the workflow's independently recomputed held-out metrics. Near-identical results are expected; model scoring on unseen email traffic is not guaranteed.
+
+The separate Python-based Streamlit demonstrator remains available at `streamlit_app.py`, for local use or deployment on a Python-capable host.
 
 ## Interactive dashboard
 
