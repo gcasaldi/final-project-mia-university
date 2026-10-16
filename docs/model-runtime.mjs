@@ -115,12 +115,16 @@ export function analyzeAddress(value) {
   const chunks=address.split("@");
   if(chunks.length!==2) return {address,level:"invalid",messages:["An email address must contain exactly one @ character."],provider:null};
   const domain=chunks[1].toLowerCase();
+  // Short-circuit oversized input: the edit-distance lookup is intended for short domain names.
+  if (address.length > 254) {
+    return {address,level:"invalid",messages:["An email address may not exceed 254 characters."],provider:null};
+  }
   const issues=[], cautions=[];
   if (/[,;]/.test(domain)) issues.push("Invalid separator in the domain (comma or semicolon).");
   if(!/^[A-Za-z0-9.!#$%&'*+/=?^_{|}~-]+@(?:[A-Za-z0-9](?:[A-Za-z0-9-]{0,61}[A-Za-z0-9])?\.)+[A-Za-z]{2,63}$/.test(address)) issues.push("Address does not meet the standard ASCII format checked by this demo.");
   if(/[^\x00-\x7F]/.test(address)) cautions.push("Unicode characters: manual review for possible homoglyphs.");
   if(domain.includes("xn--")) cautions.push("Punycode/IDN domain: manual review suggested.");
-  const provider=closestProvider(domain.replace(/[,;]/g,"."));
+  const provider=closestProvider(domain.replace(/[,;]/g,".").replace(/\.$/,""));
   if(provider) issues.push("Domain resembles "+provider+" (possible impersonation).");
   return {address,level:issues.length?"suspicious":cautions.length?"review":"no-obvious-issue",
     messages:[...issues,...cautions],provider};
