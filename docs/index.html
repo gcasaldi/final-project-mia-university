@@ -22,7 +22,6 @@
         <a href="#analysis">Analyze</a>
         <a href="#results">Results</a>
         <a href="#method">Methodology</a>
-        <a href="#supervisor">For the supervisor</a>
       </nav>
       <a class="header-repo" href="https://github.com/gcasaldi/final-project-mia-university" target="_blank" rel="noopener noreferrer">Source code <span aria-hidden="true">↗</span></a>
     </div>
@@ -102,26 +101,6 @@
       <p class="small-note">The auxiliary email-address checker uses deterministic rules and is not counted as a separate machine-learning model or included in the reported classifier metrics.</p>
     </section>
 
-    <section class="main-section" id="supervisor">
-      <div class="section-heading"><div><p class="eyebrow">04 / Supervisor review</p><h2>Code, reproducibility and documentation</h2><p>This section collects the material needed to inspect the implementation, reproduce the experiment and understand how the browser demonstration relates to the Python baseline.</p></div></div>
-      <div class="supervisor-card">
-        <div class="supervisor-intro"><div><p class="eyebrow">Prepared for academic review</p><h3>Professor Damiano Laviola</h3><p>Project: <em>AI-Powered Phishing Email Detection Using Natural Language Processing and Machine Learning</em></p></div><a class="outlined" href="https://github.com/gcasaldi/final-project-mia-university" target="_blank" rel="noopener noreferrer">Open full repository ↗</a></div>
-        <div class="link-grid">
-          <a href="https://github.com/gcasaldi/final-project-mia-university/blob/main/notebooks/Final_Project_v3_Colab.ipynb" target="_blank" rel="noopener noreferrer"><span class="resource-icon">01</span><span><strong>Reproducible Colab notebook</strong><small>Training, validation, external evaluation and saved artifacts</small></span><span class="arrow">↗</span></a>
-          <a href="https://github.com/gcasaldi/final-project-mia-university/blob/main/src/model_service.py" target="_blank" rel="noopener noreferrer"><span class="resource-icon">02</span><span><strong>Python ML implementation</strong><small>Data cleaning, TF-IDF and Logistic Regression</small></span><span class="arrow">↗</span></a>
-          <a href="https://github.com/gcasaldi/final-project-mia-university/blob/main/docs/model-runtime.mjs" target="_blank" rel="noopener noreferrer"><span class="resource-icon">03</span><span><strong>Browser inference implementation</strong><small>Uses exported weights from the same fitted sklearn baseline</small></span><span class="arrow">↗</span></a>
-          <a href="https://github.com/gcasaldi/final-project-mia-university/blob/main/scripts/export_browser_model.py" target="_blank" rel="noopener noreferrer"><span class="resource-icon">04</span><span><strong>Model export and parity tests</strong><small>Reproduce the browser artifact and compare predictions</small></span><span class="arrow">↗</span></a>
-          <a href="https://github.com/gcasaldi/final-project-mia-university/blob/main/src/address_validator.py" target="_blank" rel="noopener noreferrer"><span class="resource-icon">05</span><span><strong>Auxiliary address validation</strong><small>Deterministic spoofing and typo-pattern detection</small></span><span class="arrow">↗</span></a>
-          <a href="https://github.com/gcasaldi/final-project-mia-university/blob/main/README.md" target="_blank" rel="noopener noreferrer"><span class="resource-icon">06</span><span><strong>Methods and project overview</strong><small>Scope, reference results, setup and interpretation</small></span><span class="arrow">↗</span></a>
-          <a href="https://github.com/gcasaldi/final-project-mia-university/blob/main/docs/ACCEPTANCE_TEST_REPORT.md" target="_blank" rel="noopener noreferrer"><span class="resource-icon">07</span><span><strong>Acceptance test report</strong><small>Five manual cases, automated regressions and outstanding tests</small></span><span class="arrow">↗</span></a>
-        </div>
-        <div class="repro"><div><strong>Local reproducibility</strong><p>Clone the repository, install Python dependencies, run the tests and then execute the notebook or dashboard.</p></div><button type="button" class="copy-btn" id="copy-commands">Copy commands</button><pre><code>git clone https://github.com/gcasaldi/final-project-mia-university.git
-cd final-project-mia-university
-pip install -r requirements.txt
-pytest -q
-streamlit run streamlit_app.py</code></pre></div>
-      </div>
-    </section>
     <div class="limitations"><strong>Interpretation and limitations</strong><p>The classifier uses message text rather than full email headers, SPF/DKIM/DMARC, attachment scanning or URL reputation. A “Legitimate” result does not guarantee that a message is safe; attackers may write messages that resemble normal correspondence. Browser-side scores are generated from exported model weights and checked against Python reference predictions. Research metrics may differ when evaluated on other populations.</p></div>
   </main>
   <footer><div class="shell footer-inner"><div><strong>Phishing Email Detection</strong><p>Giulia Casaldi · Master's Final Project · MIA University · 2026</p></div><a href="https://github.com/gcasaldi/final-project-mia-university" target="_blank" rel="noopener noreferrer">GitHub repository ↗</a></div></footer>
