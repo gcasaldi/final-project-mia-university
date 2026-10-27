@@ -80,7 +80,6 @@ This public research website is an academic interface inspired by clean security
 - upload of plain-text .txt and .eml messages (maximum 256 KB; encoded or multipart MIME not supported);
 - deterministic lookalike-address validation, clearly separated from supervised classification;
 - documented reference metrics for both the internal test set and external TREC_07 evaluation;
-- a dedicated **supervisor review** section linking the notebook, full Python implementation, browser inference, exporter, and tests;
 - a [documented manual acceptance test report](docs/ACCEPTANCE_TEST_REPORT.md) with confirmed cases and the remaining validation plan.
 
 **Privacy:** model weights are downloaded from this public repository into the browser. The page does not intentionally upload users' email contents to a backend. It is an academic text classifier, not an antivirus scanner, URL reputation service, sender authentication check or a guarantee that a message is safe.
