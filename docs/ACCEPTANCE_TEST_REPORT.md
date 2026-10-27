@@ -29,17 +29,28 @@ Two hardening adjustments were made during the acceptance review:
 
 The automated suite runs in `.github/workflows/build_browser_model.yml`. See the [latest GitHub Actions runs](https://github.com/gcasaldi/final-project-mia-university/actions).
 
-## Next acceptance checks — not yet completed
+## Additional mobile and file-upload checks — 27 October 2026
+
+Two file-based checks were completed from an Android smartphone using the public GitHub Pages interface:
+
+| Input | Observed result | Assessment |
+|---|---|---|
+| `phishing_test_email.txt` | Phishing, 98.76% model score, threshold 50%, 34 recognised features | Pass |
+| `phishing_test_email.eml` | Phishing, 96.48% model score, threshold 50%, 68 recognised features | Pass |
+
+During the `.eml` test, the separate deterministic address checker also flagged `security@m1crosoft.com` as a possible impersonation of `microsoft.com`.
+
+The page remained readable and usable on the tested Android device. These checks confirm the plain-text `.txt` and `.eml` upload paths and basic responsive behaviour. They are interface-level acceptance checks and do not alter the Machine Learning evaluation metrics.
+
+## Remaining optional presentation-level checks
 
 | Test area | Procedure | Evidence to record |
 |---|---|---|
 | Trained text classifier | Use **Legitimate example** then **Analyze email** | Label, score, and feature explanation |
 | Trained text classifier | Use **Phishing example** then **Analyze email** | Label, score, and feature explanation |
 | Input validation | Try fewer than five words | Appropriate explanation, no prediction |
-| Privacy and upload | Analyze a simple .txt file and a plain-text .eml file | Predicted label and score; no external upload |
 | MIME limitation | Choose a multipart or encoded .eml | Explicit unsupported-format warning |
-| Responsive UI | Check desktop and mobile browser | Readability, navigation, keyboard/tap interaction |
-| Performance | Check initial model loading and repeat classification | Download size, cold load time, repeat latency |
+| Performance | If desired, benchmark initial model loading and repeat classification | Cold-load and repeat latency |
 
 **Interpretation:** A high score is the trained model's classification estimate on the supplied text, not a calibrated real-world probability of harm. Even when the address checker reports no anomaly or the text model predicts “Legitimate”, the email can still be malicious.
 
