@@ -88,11 +88,6 @@ byId("analyze-file").addEventListener("click",async()=>{
     emailResult(content,"locally selected file");
   }catch(e){report("File reading error",e.message);}
 });
-byId("copy-commands").addEventListener("click",async()=>{
-  const command="git clone https://github.com/gcasaldi/final-project-mia-university.git\ncd final-project-mia-university\npip install -r requirements.txt\npytest -q\nstreamlit run streamlit_app.py";
-  try{await navigator.clipboard.writeText(command);byId("copy-commands").textContent="Copied";}
-  catch(_){byId("copy-commands").textContent="Please select the commands"; }
-});
 async function init(){
   try{
     const response=await fetch("./model.json",{cache:"default"});
