@@ -1,7 +1,7 @@
 import {compileModel,predictEmail,verifyExport,analyzeAddress,scanAddresses} from "./model-runtime.mjs";
 const byId=id=>document.getElementById(id);
 const elem=(tag,text,cls)=>{const e=document.createElement(tag);if(text!==undefined)e.textContent=text;if(cls)e.className=cls;return e;};
-let model=null,modelError="Training artifact has not been published.",modelLoadMs=null;
+let model=null,modelError="Training artifact has not been published.";
 const result=byId("analysis-result");
 function report(title,description,level="neutral",items=[]){
   result.replaceChildren();
@@ -15,9 +15,7 @@ function report(title,description,level="neutral",items=[]){
 function emailResult(text,source){
   if(!model){report("Model unavailable","The validated machine-learning model is not available yet. "+modelError);return;}
   try{
-    const predictionStart=performance.now();
     const r=predictEmail(model,text),bad=r.prediction==="Phishing";
-    const predictionMs=performance.now()-predictionStart;
     report("Model classification · "+source,"Prediction generated locally using the exported TF-IDF and Logistic Regression parameters.",bad?"bad":"good");
     const chip=result.querySelector(".result-chip");
     chip.textContent=r.prediction;
@@ -40,7 +38,6 @@ function emailResult(text,source){
       r.topFeatures.slice(0,4).forEach(f=>ul.append(elem("li",f.term+" ("+(f.weight>=0?"+":"")+f.weight.toFixed(3)+")")));
       details.append(ul);
     }
-    details.append(elem("p","Analysis time: "+predictionMs.toFixed(1)+" ms"+(modelLoadMs!==null?" · Model load this session: "+modelLoadMs.toFixed(0)+" ms":""));
     result.append(details,elem("p","Research classifier, not a security guarantee. This score is not a calibrated probability of harm or evidence that a sender is genuine.","result-footnote"));
   }catch(e){report("Cannot complete classification",e.message);}
 }
@@ -92,7 +89,6 @@ byId("analyze-file").addEventListener("click",async()=>{
   }catch(e){report("File reading error",e.message);}
 });
 async function init(){
-  const loadStart=performance.now();
   try{
     const response=await fetch("./model.json",{cache:"default"});
     if(!response.ok)throw new Error("Model download returned "+response.status+".");
@@ -100,9 +96,8 @@ async function init(){
     const compiled=compileModel(data);
     const parity=verifyExport(compiled);
     model=compiled;
-    modelLoadMs=performance.now()-loadStart;
     byId("model-status").className="status ready";
-    byId("model-status-text").textContent="ML model ready · "+parity.tests+" checks passed · load "+modelLoadMs.toFixed(0)+" ms";
+    byId("model-status-text").textContent="ML model ready · "+parity.tests+" checks passed";
   }catch(error){
     modelError=error.message;
     byId("model-status").className="status error";
